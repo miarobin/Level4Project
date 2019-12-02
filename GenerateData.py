@@ -44,18 +44,9 @@ def one_process(CM, n):
     p_b = np.array([np.sqrt(CM), 0, 0, -np.sqrt(CM)])
     return np.concatenate([p_a, p_b], rambo(n))
 
-def invert_momenta(p):
-        """ fortran/C-python do not order table in the same order"""
-        new_p = []
-        for i in range(len(p[0])):  new_p.append([0]*len(p))
-        for i, onep in enumerate(p):
-            for j, x in enumerate(onep):
-                new_p[j][i] = x
-        return new_p
-
 ##Initital variables:
-CM = 100000 #Center of mass energy
-n_process = 10 #Number of phase space points to generate
+CM = 1000000 #Center of mass energy
+n_process = 1000000 #Number of phase space points to generate
 n_jet = 3 #Number of jets
 matrix2py.initialisemodel('../../Cards/param_card.dat')
 alphas = 0.13
@@ -63,7 +54,7 @@ nhel = -1 # means sum over all helicity
 
 ###Make Data
 momentum = np.array([one_process(CM, n_jet) for i in tqdm(range(n_process))]) #Generate momenta                                                                                  
-momentum_inv = [invert_momenta(momenta) for momenta in tqdm(momentum)] #Invert momenta
+momentum_inv = [np.transpose(momenta) for momenta in tqdm(momentum)] #Invert momenta
 me = [matrix2py.get_value(P, alphas, nhel) for P in tqdm(momentum_inv)] #Get corresponding matrix elements
 
 np.save('me_{}jet_{}'.format(n_jet, n_process), me, allow_pickle=True)
