@@ -42,7 +42,7 @@ def one_process(CM, n):
     #Generate one full set of momenta incl input particle momenta
     p_a = np.array([np.sqrt(CM), 0, 0, np.sqrt(CM)])
     p_b = np.array([np.sqrt(CM), 0, 0, -np.sqrt(CM)])
-    return np.concatenate([p_a, p_b], rambo(n))
+    return np.concatenate(([p_a, p_b], rambo(n)))
 
 ##Initital variables:
 CM = 1000000 #Center of mass energy
