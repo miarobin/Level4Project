@@ -2,6 +2,7 @@
 import numpy as np
 import matrix2py
 from tqdm import tqdm
+import pandas as pd
 
 
 def minkowski_product(p1, p2):
@@ -38,11 +39,15 @@ def rambo(n = 5):
     p = np.transpose(np.array([p_0, p_123[0], p_123[1], p_123[2]]))
     return p
 
-def one_process(CM, n):
-    #Generate one full set of momenta incl input particle momenta
+def sing_event(CM, n):
+    #Generate one full set of momenta and matrix element
     p_a = np.array([np.sqrt(CM), 0, 0, np.sqrt(CM)])
     p_b = np.array([np.sqrt(CM), 0, 0, -np.sqrt(CM)])
-    return np.concatenate(([p_a, p_b], rambo(n)))
+    
+    mom = rambo(n)*CM #Output momenta
+    me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b], mom)))) #Matrix element calculation
+   
+    return (me, mom)
 
 ##Initital variables:
 CM = 1000000 #Center of mass energy
@@ -53,9 +58,9 @@ alphas = 0.13
 nhel = -1 # means sum over all helicity       
 
 ###Make Data
-momentum = np.array([one_process(CM, n_jet) for i in tqdm(range(n_process))]) #Generate momenta                                                                                  
-momentum_inv = [np.transpose(momenta) for momenta in tqdm(momentum)] #Invert momenta
-me = [matrix2py.get_value(P, alphas, nhel) for P in tqdm(momentum_inv)] #Get corresponding matrix elements
-
-np.save('me_{}jet_{}'.format(n_jet, n_process), me, allow_pickle=True)
-np.save('mom_{}jet_{}'.format(n_jet, n_process), momentum, allow_pickle=True)
+for i in range(n_processes):
+    me, mom = sing_event(CM, n_jet)
+    pd.to_hdf('me_{}jet_{}'.format(n_jet, n_process), key='me', mode='a')
+    pd.to_hdf('mom_{}jet_{}'.format(n_jet, n_process), key='mom', mode='a')
+    
+              
