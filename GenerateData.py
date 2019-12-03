@@ -58,9 +58,13 @@ alphas = 0.13
 nhel = -1 # means sum over all helicity       
 
 ###Make Data
+mom_f=open('me_{}jet_{}'.format(n_jet, n_process), 'ab')
+me_f=open('mom_{}jet_{}'.format(n_jet, n_process), 'ab')
 for i in range(n_processes):
     me, mom = sing_event(CM, n_jet)
-    pd.to_hdf('me_{}jet_{}'.format(n_jet, n_process), key='me', mode='a')
-    pd.to_hdf('mom_{}jet_{}'.format(n_jet, n_process), key='mom', mode='a')
+    np.savetxt(mom_f, mom)
+    np.savetxt(me_f, me)
+me_f.close()
+mom_f.close()
     
               
