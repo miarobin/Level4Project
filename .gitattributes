@@ -1,0 +1,5 @@
+*.csv filter=lfs diff=lfs merge=lfs -text
+mom_3jet_3000000.csv filter=lfs diff=lfs merge=lfs -text
+me_3jet_100.csv filter=lfs diff=lfs merge=lfs -text
+me_3jet_3000000.csv filter=lfs diff=lfs merge=lfs -text
+mom_3jet_100.csv filter=lfs diff=lfs merge=lfs -text
