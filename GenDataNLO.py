@@ -3,7 +3,7 @@ import numpy as np
 import matrix2py
 from tqdm import tqdm
 import pandas as pd
-
+import sys
 
 def minkowski_product(p1, p2):
     #Minkowski product of two 4-vectors
@@ -45,27 +45,36 @@ def sing_event(CM, n):
     p_b = np.array([np.sqrt(CM), 0, 0, -np.sqrt(CM)])/2
     
     mom = rambo(n)*np.sqrt(CM) #Output momenta
-    me = matrix2py.get_me(np.transpose(np.concatenate(([p_a, p_b], mom))), alphas, renormalisation_scale, nhel) #Matrix element calculation
+    me = matrix2py.get_me(np.transpose(np.concatenate(([p_a, p_b], mom))), alphas, renormalisation_scale, nhel)[0] #Matrix element calculation
    
     return (me, mom)
 
 ##Initital variables:
 CM = 1000000 #Center of mass energy
-n_process = 1000000 #Number of phase space points to generate
 n_jet = 2 #Number of jets
 matrix2py.initialise('../../Cards/param_card.dat')
 alphas = 0.118
 renormalisation_scale = 91.188
 nhel = -1 # means sum over all helicity       
 
-###Make Data
-mom_f=open('NLO_mom_{}jet_{}'.format(n_jet, n_process), 'ab')
-me_f=open('NLO_me_{}jet_{}'.format(n_jet, n_process), 'ab')
-for i in tqdm(range(n_process)):
-    me, mom = sing_event(CM, n_jet)
-    np.savetxt(mom_f, [np.ravel(mom)])
-    np.savetxt(me_f, [me])
-me_f.close()
-mom_f.close()
+
+def genDataCSV(n_processes):
+    ###Make Data
+    mom_f=open('NLO_mom_{}jet_{}'.format(n_jet, n_process), 'ab')
+    me_f=open('NLO_me_{}jet_{}'.format(n_jet, n_process), 'ab')
+    for i in tqdm(range(n_process)):
+        me, mom = sing_event(CM, n_jet)
+        np.savetxt(mom_f, [np.ravel(mom)])
+        np.savetxt(me_f, [me])
+    me_f.close()
+    mom_f.close()
     
-              
+def genDataNPY(n_processes):
+    me = np.zeros(n_processes)
+    mom = np.zeros((n_processes, n_jet))
+    for i in tqdm(range(n_process)):
+        me[i], mom[i] = sing_event(CM, n_jet)
+    np.save('NLO_mom_{}jet_{}'.format(n_jet, n_process), mom)
+    np.save('NLO_me_{}jet_{}'.format(n_jet, n_process), me)
+
+genDataNPY(sys.argv) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)

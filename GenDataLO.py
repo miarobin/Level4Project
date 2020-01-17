@@ -51,20 +51,30 @@ def sing_event(CM, n):
 
 ##Initital variables:
 CM = 1000000 #Center of mass energy
-n_process = 3000000 #Number of phase space points to generate
 n_jet = 3 #Number of jets
 matrix2py.initialisemodel('../../Cards/param_card.dat')
 alphas = 0.13
 nhel = -1 # means sum over all helicity       
-
-###Make Data
-mom_f=open('mom_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
-me_f=open('me_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
-for i in tqdm(range(n_process)):
-    me, mom = sing_event(CM, n_jet)
-    np.savetxt(mom_f, [np.ravel(mom)])
-    np.savetxt(me_f, [me])
-me_f.close()
-mom_f.close()
     
+    
+def genDataCSV(n_processes):
+    ###Make Data
+    mom_f=open('LO_mom_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
+    me_f=open('LO_me_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
+    for i in tqdm(range(n_process)):
+        me, mom = sing_event(CM, n_jet)
+        np.savetxt(mom_f, [np.ravel(mom)])
+        np.savetxt(me_f, [me])
+    me_f.close()
+    mom_f.close()
+    
+def genDataNPY(n_processes):
+    me = np.zeros(n_processes)
+    mom = np.zeros((n_processes, n_jet))
+    for i in tqdm(range(n_process)):
+        me[i], mom[i] = sing_event(CM, n_jet)
+    np.save('LO_mom_{}jet_{}'.format(n_jet, n_process), mom)
+    np.save('LO_me_{}jet_{}'.format(n_jet, n_process), me)
+
+genDataNPY(sys.argv) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
               
