@@ -77,4 +77,4 @@ def genDataNPY(n_processes):
     np.save('NLO_mom_{}jet_{}'.format(n_jet, n_process), mom)
     np.save('NLO_me_{}jet_{}'.format(n_jet, n_process), me)
 
-genDataNPY(sys.argv) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
+genDataNPY(int(sys.argv)) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
