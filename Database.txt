@@ -1,0 +1,12 @@
+LO/
+    MG_uuxg/
+    PROCESS: e+ e- > u u~ g
+    SINGULARITIES: 13 & 23
+NLO/
+    MG_uux/
+    PROCESS: e+ e- > u u~
+    SINGULARITIES: None
+    
+    
+
+

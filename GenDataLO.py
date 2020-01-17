@@ -3,6 +3,7 @@ import numpy as np
 import matrix2py
 from tqdm import tqdm
 import pandas as pd
+import sys
 
 
 def minkowski_product(p1, p2):
