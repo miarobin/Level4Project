@@ -47,7 +47,7 @@ def sing_event(CM, n):
     mom = rambo(n)*np.sqrt(CM) #Output momenta
     me = matrix2py.get_me(np.transpose(np.concatenate(([p_a, p_b], mom))), alphas, renormalisation_scale, nhel)[0] #Matrix element calculation
    
-    return (me, mom)
+    return (np.array(me), mom)
 
 ##Initital variables:
 CM = 1000000 #Center of mass energy
@@ -65,16 +65,23 @@ def genDataCSV(n_processes):
     for i in tqdm(range(n_process)):
         me, mom = sing_event(CM, n_jet)
         np.savetxt(mom_f, [np.ravel(mom)])
-        np.savetxt(me_f, [me])
+        np.savetxt(me_f, [np.ravel(me)])
     me_f.close()
     mom_f.close()
     
 def genDataNPY(n_processes):
-    me = np.zeros(n_processes)
+    me = np.zeros((n_processes,4))
     mom = np.zeros((n_processes, n_jet))
     for i in tqdm(range(n_process)):
         me[i], mom[i] = sing_event(CM, n_jet)
     np.save('NLO_mom_{}jet_{}'.format(n_jet, n_process), mom)
     np.save('NLO_me_{}jet_{}'.format(n_jet, n_process), me)
 
+##IMPORTANT
+#me[0] : Born Matrix Element
+#me[1] : Finite Part of NLO Matrix Element
+#me[2] : Single Pole Residue
+#me[3] : Double Pole Residue    
+    
+    
 genDataNPY(int(sys.argv)) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)

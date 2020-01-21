@@ -9,7 +9,8 @@ def m_prod_arr(p1, p2):
 def mandel_creation(combs_str, mom_flat):
     mandel_vars = []
     for comb in combs_str:
-        p = np.sum(np.array([mom_flat[:, (int(i) - 1)*4: int(i)*4] for i in comb.split(',')]), axis=0) #Summing momenta in propagator
+        p = np.sum(np.array([mom_flat[:, (int(i) - 1)*4: int(i)*4] for i in comb.split(',')]), axis=0) 
+        print(p.shape)
         mandel_vars.append(m_prod_arr(p, p)) 
     return mandel_vars
 
@@ -24,11 +25,12 @@ def npy(me_filename, mom_filename, combs_str, com_energy, frac=1):
     mom=mom_raw[:int(frac*len(mom_raw))]
     
     ##Flatten Momentum
-    mom = np.array([np.ndarray.flatten(np.array(element)) for element in mom_raw])
+    mom = np.array([np.ndarray.flatten(np.array(element)) for element in mom])
 
     ##Reformat Matrix Element (remove divergent behaviour)
-    mandel_vars = mandel_creation(combs_str, mom)
-    mom = reduce(np.multiply, mandel_vars)/com_energy**(2*len(mandel_vars))
+    if len(combs_str) > 0:
+        mandel_vars = mandel_creation(combs_str, mom)
+        mom = reduce(np.multiply, mandel_vars)/com_energy**(2*len(mandel_vars))
 
     return(me, mom)
 
@@ -42,7 +44,8 @@ def csv(me_filename, mom_filename, combs_str, com_energy, frac=1):
     mom=mom_raw[:int(frac*len(mom_raw))]
 
     ##Reformat Matrix Element (remove divergent behaviour)
-    mandel_vars = mandel_creation(combs_str, mom)
-    mom = reduce(np.multiply, mandel_vars)/com_energy**(2*len(mandel_vars))
+    if len(combs_str) > 0:
+        mandel_vars = mandel_creation(combs_str, mom)
+        mom = reduce(np.multiply, mandel_vars)/com_energy**(2*len(mandel_vars))
     
     return(me, mom)

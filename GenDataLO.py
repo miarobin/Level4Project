@@ -71,11 +71,11 @@ def genDataCSV(n_processes):
     
 def genDataNPY(n_processes):
     me = np.zeros(n_processes)
-    mom = np.zeros((n_processes, n_jet))
-    for i in tqdm(range(n_process)):
+    mom = np.zeros((n_processes, n_jet, 4))
+    for i in tqdm(range(n_processes)):
         me[i], mom[i] = sing_event(CM, n_jet)
     np.save('LO_mom_{}jet_{}'.format(n_jet, n_process), mom)
     np.save('LO_me_{}jet_{}'.format(n_jet, n_process), me)
 
-genDataNPY(int(sys.argv)) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
+genDataNPY(int(sys.argv[1])) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
               

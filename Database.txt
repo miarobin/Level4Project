@@ -1,11 +1,14 @@
 LO/
-    MG_uuxg/
-    PROCESS: e+ e- > u u~ g
-    SINGULARITIES: 13 & 23
+    MG_uuxg/ -- Has first 2 columns of input momenta
+        PROCESS: e+ e- > u u~ g
+        SINGULARITIES: 13 & 23 
+    MG_uuuuxuxux/
+        PROCESS: e+ e- > u u u u~ u~ u~
+        SINGULARITIES:
 NLO/
     MG_uux/
-    PROCESS: e+ e- > u u~
-    SINGULARITIES: None
+        PROCESS: e+ e- > u u~
+        SINGULARITIES: None
     
     
 
