@@ -54,7 +54,7 @@ CM = 1000000 #Center of mass energy
 n_jet = 2 #Number of jets
 matrix2py.initialise('../../Cards/param_card.dat')
 alphas = 0.118
-renormalisation_scale = 91.188
+renormalisation_scale = np.sqrt(CM)
 nhel = -1 # means sum over all helicity       
 
 
@@ -71,11 +71,11 @@ def genDataCSV(n_processes):
     
 def genDataNPY(n_processes):
     me = np.zeros((n_processes,4))
-    mom = np.zeros((n_processes, n_jet))
-    for i in tqdm(range(n_process)):
+    mom = np.zeros((n_processes, n_jet,4))
+    for i in tqdm(range(n_processes)):
         me[i], mom[i] = sing_event(CM, n_jet)
-    np.save('NLO_mom_{}jet_{}'.format(n_jet, n_process), mom)
-    np.save('NLO_me_{}jet_{}'.format(n_jet, n_process), me)
+    np.save('NLO_mom_{}jet_{}'.format(n_jet, n_processes), mom)
+    np.save('NLO_me_{}jet_{}'.format(n_jet, n_processes), me)
 
 ##IMPORTANT
 #me[0] : Born Matrix Element
@@ -84,4 +84,4 @@ def genDataNPY(n_processes):
 #me[3] : Double Pole Residue    
     
     
-genDataNPY(int(sys.argv)) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
+genDataNPY(int(sys.argv[1])) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
