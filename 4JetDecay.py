@@ -43,47 +43,41 @@ def rambo(n = 4):
 def sing_event(CM, s):
     p = (CM**2 - s)/(2*CM) #Modulus of p_1
     E = np.sqrt(mod_p4**2 + s) #Energy of p234
+
+    theta = 0.1
+    gamma = E/s
+    beta = p/E
+
     BOOST = [[gamma, 0, 0, -beta*gamma],
-            [-beta*gamma*sin(theta), 0, 0, gamma*sin(theta)],
+            [-beta*gamma*np.sin(theta), 0, 0, gamma*np.sin(theta)],
             [0, 0, 1, 0],
-            [-beta*gamma*cos(theta), 0, 0, gamma*cos(theta)]]
+            [-beta*gamma*np.cos(theta), 0, 0, gamma*np.cos(theta)]]
 
     #Generate one full set of momenta and matrix element
     ##Incoming Momenta
-    p_a = np.array([np.sqrt(CM), 0, 0, np.sqrt(CM)])/2
-    p_b = np.array([np.sqrt(CM), 0, 0, -np.sqrt(CM)])/2
+    p_a = np.array([CM, 0, 0, CM])/2
+    p_b = np.array([CM, 0, 0, -CM])/2
     
     ##Subset momenta. (s_234 small)
     #Momentum in s frame.
     mom_s = rambo(3)*s
     #Boost to CM frame.
-    mom_cm = np.multiply(BOOST, mom_s, axis = 1)
+    mom_cm = [np.dot(BOOST, mom_part) for mom_part in mom_s]
 
     #Final parton. 
-    p_1 = [p, p*cos(theta), 0, p*sin(theta)]
+    p_1 = [p, p*np.cos(theta), 0, p*np.sin(theta)]
     
-    me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b, p_1], mom))),alphas,nhel) #Matrix element calculation
+    me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b, p_1], mom_cm))),alphas,nhel) #Matrix element calculation
     
     return (me, np.concatenate([p_1,mom]))
 
 ##Initital variables:
-CM = 1000000 #Center of mass energy
+CM = 1000 #Center of mass energy
 n_jet = 4 #Number of jets
 matrix2py.initialisemodel('../../Cards/param_card.dat')
 alphas = 0.13
 nhel = -1 # means sum over all helicity       
     
-    
-def genDataCSV(n_processes):
-    ###Make Data
-    mom_f=open('LO_mom_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
-    me_f=open('LO_me_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
-    for i in tqdm(range(n_process)):
-        me, mom = sing_event(CM, n_jet)
-        np.savetxt(mom_f, [np.ravel(mom)])
-        np.savetxt(me_f, [me])
-    me_f.close()
-    mom_f.close()
     
 def genDataNPY(n_processes):
     me = np.zeros(n_processes)

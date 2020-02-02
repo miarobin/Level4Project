@@ -42,16 +42,16 @@ def rambo(n = 5):
 
 def sing_event(CM, n):
     #Generate one full set of momenta and matrix element
-    p_a = np.array([np.sqrt(CM), 0, 0, np.sqrt(CM)])/2
-    p_b = np.array([np.sqrt(CM), 0, 0, -np.sqrt(CM)])/2
+    p_a = np.array([CM, 0, 0, CM])/2
+    p_b = np.array([CM, 0, 0, -CM])/2
     
-    mom = rambo(n)*np.sqrt(CM) #Output momenta
+    mom = rambo(n)*CM #Output momenta
     me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b], mom))),alphas,nhel) #Matrix element calculation
     
     return (me, mom)
 
 ##Initital variables:
-CM = 1000000 #Center of mass energy
+CM = 1000 #Center of mass energy
 n_jet = 3 #Number of jets
 matrix2py.initialisemodel('../../Cards/param_card.dat')
 alphas = 0.13
