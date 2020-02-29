@@ -42,7 +42,7 @@ def rambo(n = 4):
 
 def sing_event(CM, s):
     p = (CM**2 - s)/(2*CM) #Modulus of p_1
-    E = np.sqrt(mod_p4**2 + s) #Energy of p234
+    E = np.sqrt(p**2 + s) #Energy of p234
 
     theta = 0.1
     gamma = E/s
@@ -69,7 +69,7 @@ def sing_event(CM, s):
     
     me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b, p_1], mom_cm))),alphas,nhel) #Matrix element calculation
     
-    return (me, np.concatenate([p_1,mom]))
+    return (me, np.concatenate(([p_1],mom_cm)))
 
 ##Initital variables:
 CM = 1000 #Center of mass energy
