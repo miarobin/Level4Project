@@ -47,7 +47,7 @@ def smarterPolynomialFeatures(n, mom):
     full_mom = np.insert(np.insert(mom, 0, p_a, axis=1), 0, p_b, axis=1)
     all_mandel = DataPreprocessing.mandel_creation(mandel_strings, full_mom)
     
-    poly_features = PolynomialFeatures(degree=1)
+    poly_features = PolynomialFeatures(degree=2)
     poly = poly_features.fit_transform(all_mandel.T)
     
     return poly

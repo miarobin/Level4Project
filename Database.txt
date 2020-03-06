@@ -20,6 +20,10 @@ LO/
         PROCESS: e+ e- > u u u~ u~
         SINGULARITIES: 234
         ### 1000 has angle theta = 0.1, 999 has theta = 1
+        
+    MG_uuxgg/
+        PROCESS: e+ e- > u u~ g g
+        ###Joe's momenta & matrix element have been separated by a JADE jet algorithm R=0.01. RAMBO is random across entire phase space.
             
 NLO/
     MG_uux/

@@ -25,7 +25,7 @@ def npy(me_filename, mom_filename, combs_str, frac=1):
     ##combs_str is the xyz in s_xyz... which the matrix element is multiplied by, to remove IR infinites.
     ##Data Aquisition
     me_raw = np.load(me_filename, allow_pickle=True) #Matrix elements
-    #me_raw = np.ones(len(me_raw))
+
     mom_raw = np.load(mom_filename, allow_pickle=True, encoding='bytes') #4-momenta of inputs
     ##Obtain fraction of data
     me=me_raw[:int(frac*len(me_raw))]
