@@ -41,12 +41,11 @@ def rambo(n = 5):
     p = np.transpose(np.array([p_0, p_123[0], p_123[1], p_123[2]]))
     return p
 
-def sing_event(CM, n):
+def sing_event(mom, CM, n):
     #Generate one full set of momenta and matrix element
     p_a = np.array([CM, 0, 0, CM])/2
     p_b = np.array([CM, 0, 0, -CM])/2
     
-    mom = rambo(n)*CM #Output momenta
     me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b], mom))),alphas,nhel) #Matrix element calculation
     
     return (me, mom)
@@ -55,26 +54,17 @@ def sing_event(CM, n):
 CM = 1000 #Center of mass energy
 n_jet = 3 #Number of jets
 matrix2py.initialisemodel('../../Cards/param_card.dat')
-alphas = 0.13
+alphas = 0.08703536379467461
 nhel = -1 # means sum over all helicity       
-    
-    
-def genDataCSV(n_processes):
-    ###Make Data
-    mom_f=open('LO_mom_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
-    me_f=open('LO_me_{}jet_{}.csv'.format(n_jet, n_process), 'ab')
-    for i in tqdm(range(n_process)):
-        me, mom = sing_event(CM, n_jet)
-        np.savetxt(mom_f, [np.ravel(mom)])
-        np.savetxt(me_f, [me])
-    me_f.close()
-    mom_f.close()
     
 def genDataNPY(n_processes):
     me = np.zeros(n_processes)
     mom = np.zeros((n_processes, n_jet, 4))
     for i in tqdm(range(n_processes)):
-        me[i], mom[i] = sing_event(CM, n_jet)
+        mom[i] = rambo(n)*CM
+        
+    for i in tqdm(range(n_processes)):
+        me[i] = sing_event(mom[i], CM, n_jet)
     np.save('LO_mom_{}jet_{}'.format(n_jet, n_processes), mom)
     np.save('LO_me_{}jet_{}'.format(n_jet, n_processes), me)
 

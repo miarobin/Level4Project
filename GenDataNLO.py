@@ -1,4 +1,5 @@
 ##RAMBO Momentum Generator
+from __future__ import division
 import numpy as np
 import matrix2py
 from tqdm import tqdm
@@ -53,7 +54,7 @@ def sing_event(CM, n):
 CM = 1000 #Center of mass energy
 n_jet = 2 #Number of jets
 matrix2py.initialise('../../Cards/param_card.dat')
-alphas = 0.118
+alphas = 0.087
 renormalisation_scale = CM
 nhel = -1 # means sum over all helicity       
 
