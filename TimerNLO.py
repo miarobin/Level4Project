@@ -6,7 +6,6 @@ from tqdm import tqdm
 import pandas as pd
 import sys
 
-
 def minkowski_product(p1, p2):
     #Minkowski product of two 4-vectors
     return np.sum(p1[0]*p2[0] - p1[1]*p2[1] - p1[2]*p2[2] - p1[3]*p2[3])
@@ -46,27 +45,35 @@ def sing_event(mom, CM, n):
     p_a = np.array([CM, 0, 0, CM])/2
     p_b = np.array([CM, 0, 0, -CM])/2
     
-    me = matrix2py.get_value(np.transpose(np.concatenate(([p_a, p_b], mom))),alphas,nhel) #Matrix element calculation
-    
-    return me
+    me = matrix2py.get_me(np.transpose(np.concatenate(([p_a, p_b], mom))), alphas, renormalisation_scale, nhel)[0] #Matrix element calculation
+   
+    return np.array(me)
 
 ##Initital variables:
 CM = 1000 #Center of mass energy
-n_jet = 3 #Number of jets
-matrix2py.initialisemodel('../../Cards/param_card.dat')
+n_jet = 2 #Number of jets
+matrix2py.initialise('../../Cards/param_card.dat')
 alphas = 0.08703536379467461
+renormalisation_scale = CM
 nhel = -1 # means sum over all helicity       
     
 def genDataNPY(n_processes):
-    me = np.zeros(n_processes)
+    me = np.zeros((n_processes,4))
     mom = np.zeros((n_processes, n_jet, 4))
     for i in tqdm(range(n_processes)):
         mom[i] = rambo(n_jet)*CM
         
     for i in tqdm(range(n_processes)):
         me[i] = sing_event(mom[i], CM, n_jet)
-    np.save('LO_mom_{}jet_{}'.format(n_jet, n_processes), mom)
-    np.save('LO_me_{}jet_{}'.format(n_jet, n_processes), me)
+    np.save('NLO_mom_{}jet_{}'.format(n_jet, n_processes), mom)
+    np.save('NLO_me_{}jet_{}'.format(n_jet, n_processes), me)
 
+    
+##IMPORTANT
+#me[0] : Born Matrix Element
+#me[1] : Finite Part of NLO Matrix Element
+#me[2] : Single Pole Residue
+#me[3] : Double Pole Residue    
+    
+    
 genDataNPY(int(sys.argv[1])) ##Enter number of datapoints when calling code (ie python GenDataLO.py 100000)
-              

@@ -1,5 +1,6 @@
 import numpy as np
 import DataPreprocessing
+import time
 
 def split(cutoff, mandel_str, mom):
     largeS = []
@@ -41,13 +42,19 @@ def saveDatasetSplit(mom_filename, me_filename, cutoff, mandel_str):
 
 def smallestS(me_filename, mom_filename, mandel_index):
     all_mandel = ['1,2','1,3','2,3']
+    #all_mandel = ['1,2','1,3','1,4','2,3','2,4','3,4']
 
     me, mom = DataPreprocessing.npy(me_filename, mom_filename, [])
+    
+    tic = time.perf_counter()
     mandel_vars = DataPreprocessing.mandel_creation(all_mandel, mom)
     smallest_indices = []
     for index, datapoint in enumerate(mandel_vars.T):
         if np.argmin(datapoint) == mandel_index:
             smallest_indices.append(index)
-            
+    toc = time.perf_counter()
+    print(f"Split ran in {toc - tic:0.4f} seconds")
     return me[smallest_indices], mom[smallest_indices]
+
+
 

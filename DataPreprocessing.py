@@ -1,5 +1,6 @@
 import numpy as np
 from functools import reduce
+import time
 
 ##Minkowski product of 4-vectors p1, p2.
 def m_prod_arr(p1, p2):
@@ -33,8 +34,15 @@ def npy(me_filename, mom_filename, combs_str, frac=1):
 
     ##Reformat Matrix Element (remove divergent behaviour)
     if len(combs_str) > 0:
+        tic = time.perf_counter()
+
         mandel_vars = reduce(np.multiply, mandel_creation(combs_str, mom))
         me = np.multiply(me, mandel_vars)
+        
+        toc = time.perf_counter()
+
+        print(f"Matrix Element Prep in {toc - tic:0.4f} seconds")
+        
 
     return(me, mom)
 
